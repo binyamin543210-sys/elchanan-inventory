@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>אלחנן עודפים V20 – ענן משותף</title>
+  <meta name="theme-color" content="#0d9488" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>אלחנן עודפים V20</h1>
+    <p class="subtitle">ענן משותף · ניהול מלאי חכם</p>
+  </header>
+
+  <main class="app-main">
+    <section class="toolbar">
+      <div class="search-wrapper">
+        <input id="searchInput" type="search" placeholder="חיפוש מוצר..." />
+      </div>
+      <button id="addProductBtn" class="primary-btn">➕ מוצר חדש</button>
+    </section>
+
+    <section class="hint">
+      <p>
+        ⚠️ בתוך הסשן: הרשימה <strong>לא תזוז</strong> כשלוחצים + או -.<br />
+        אחרי רענון / כניסה מחדש – הרשימה מסתדרת לפי שימוש אחרון.
+      </p>
+    </section>
+
+    <section>
+      <ul id="productList" class="product-list"></ul>
+    </section>
+  </main>
+
+  <!-- Modal: פרטי מוצר / שינוי מלאי -->
+  <div id="productModal" class="modal-backdrop hidden">
+    <div class="modal">
+      <header class="modal-header">
+        <h2 id="modalTitle">מוצר</h2>
+        <button id="closeModalBtn" class="icon-btn" aria-label="סגור">✕</button>
+      </header>
+
+      <div class="modal-body">
+        <div class="field">
+          <label>שם מוצר</label>
+          <input id="modalName" type="text" />
+        </div>
+
+        <div class="field">
+          <label>מלאי נוכחי</label>
+          <div class="current-stock">
+            <span id="modalCurrentStock">0</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>שינוי מהיר</label>
+          <div class="quick-actions">
+            <button id="modalMinusBtn" class="danger-btn">-1</button>
+            <button id="modalPlusBtn" class="success-btn">+1</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>עדכון מלאי ידני</label>
+          <div class="manual-stock">
+            <input id="modalManualStock" type="number" min="0" />
+            <button id="modalSaveStockBtn" class="primary-btn">שמור מלאי</button>
+          </div>
+        </div>
+      </div>
+
+      <footer class="modal-footer">
+        <button id="modalDeleteBtn" class="danger-outline-btn">🗑 מחיקת מוצר</button>
+        <button id="modalSaveProductBtn" class="secondary-btn">שמור שינויים</button>
+      </footer>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <small>
+      כדי להוסיף למסך הבית באנדרואיד:<br />
+      בתפריט ⋮ של הדפדפן בחר <strong>"הוסף למסך הבית"</strong> אחרי שהאתר מאוחסן בשרת מאובטח (כמו GitHub Pages).
+    </small>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
