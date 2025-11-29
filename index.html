@@ -2,122 +2,431 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>אלחנן עודפים · V21</title>
+  <title>אלחנן עודפים · V21 · ענן</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#020617" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #f5f5f5;
+    }
+    .app-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    h1 {
+      margin: 0 0 4px;
+      font-size: 24px;
+    }
+    .subtitle {
+      color: #aaa;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    button, .btn {
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      background: #333;
+      color: #f5f5f5;
+      transition: transform 0.05s ease, box-shadow 0.05s ease, background 0.1s ease;
+    }
+    button:hover, .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+      background: #444;
+    }
+    button:active, .btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .btn-primary {
+      background: #0058ff;
+    }
+    .btn-danger {
+      background: #b00020;
+    }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid #555;
+    }
+    .btn-small {
+      font-size: 12px;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .pill {
+      border-radius: 999px;
+    }
+
+    .card {
+      background: #181818;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      margin-bottom: 16px;
+    }
+
+    .items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .item-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 12px;
+      background: #222;
+      cursor: pointer;
+      transition: background 0.1s ease;
+    }
+    .item-row:hover {
+      background: #282828;
+    }
+
+    .item-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .item-pic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .item-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .item-title {
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #333;
+      color: #ccc;
+    }
+
+    .item-meta {
+      font-size: 12px;
+      color: #bbb;
+    }
+
+    .item-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    .item-actions-row {
+      display: flex;
+      gap: 4px;
+    }
+
+    .badge-count {
+      font-size: 13px;
+      background: #333;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    /* טוסט */
+    .toast {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      background: rgba(30,30,30,0.95);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      z-index: 3000;
+    }
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    /* מודאלים */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .modal-backdrop.show {
+      display: flex;
+    }
+    .modal {
+      background: #181818;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow: auto;
+      padding: 16px;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .modal-header h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .modal-body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    label {
+      font-size: 13px;
+      color: #ddd;
+      display: block;
+      margin-bottom: 2px;
+    }
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #111;
+      color: #f5f5f5;
+      font-size: 13px;
+    }
+    textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+
+    .divider {
+      height: 1px;
+      background: #333;
+      margin: 8px 0;
+    }
+
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .stat-box {
+      background: #222;
+      border-radius: 12px;
+      padding: 8px;
+      font-size: 13px;
+    }
+  </style>
+
+  <!-- Firebase (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js"></script>
+
+  <!-- קובץ הקונפיג -->
+  <script src="firebase-config.js"></script>
+
 </head>
 <body>
-  <header class="app-header">
-    <div class="app-title">
-      <h1>אלחנן עודפים · V21</h1>
-      <p class="subtitle">ניהול מלאי חכם · גרסת מכשיר מקומי</p>
+  <div class="toast" id="toast"></div>
+
+  <div class="app-container">
+    <h1>אלחנן עודפים · V21</h1>
+    <div class="subtitle" id="subtitle">
+      ניהול מלאי חכם · מסתנכרן בין כל המכשירים (Firebase Realtime Database)
     </div>
-    <button id="toolsToggleBtn" class="ghost-btn">🧰 כלים</button>
-  </header>
 
-  <section id="toolsMenu" class="tools-menu hidden">
-    <button data-action="showAll">הצג הכל</button>
-    <button data-action="lowStock">מלאי נמוך</button>
-    <button data-action="zeroStock">נגמרו</button>
-    <button data-action="sortByUsage">מיון לפי שימוש</button>
-    <button data-action="sortByStock">מיון לפי כמות</button>
-    <button data-action="inventoryReport">📊 דוח מלאי</button>
-    <button data-action="backup">📥 גיבוי</button>
-    <button data-action="restore">📤 שחזור</button>
-  </section>
+    <!-- פס עליון: כלים + מוצר חדש -->
+    <div class="bar">
+      <span>כלים:</span>
+      <button class="pill" data-filter="all">הצג הכל</button>
+      <button class="pill" data-filter="low">מלאי נמוך</button>
+      <button class="pill" data-filter="zero">נגמרו</button>
+      <button class="pill" id="sort-usage">מיון לפי שימוש</button>
+      <button class="pill" id="sort-qty">מיון לפי כמות</button>
+      <button class="pill" id="report-btn">דוח מלאי</button>
+      <button class="pill" id="backup-btn">גיבוי</button>
+      <button class="pill" id="restore-btn">שחזור</button>
 
-  <main class="app-main">
-    <section class="toolbar">
-      <div class="search-wrapper">
-        <input id="searchInput" type="search" placeholder="חיפוש מוצר..." />
+      <span style="flex:1"></span>
+
+      <button class="btn-primary" id="new-item-btn">➕ מוצר חדש</button>
+    </div>
+
+    <!-- רשימת מוצרים -->
+    <div class="card">
+      <div class="items-list" id="items-list"></div>
+      <div id="empty-state" style="font-size:13px;color:#888;display:none;margin-top:4px;">
+        אין עדיין מוצרים. לחץ על "➕ מוצר חדש".
       </div>
-      <button id="addProductBtn" class="primary-btn">➕ מוצר חדש</button>
-    </section>
+    </div>
+  </div>
 
-    <ul id="productList" class="product-list"></ul>
-  </main>
-
-  <footer class="app-footer">
-    הנתונים נשמרים <strong>רק על המכשיר הזה</strong>. אם רוצים להעתיק למכשיר אחר – להשתמש בגיבוי ושחזור.
-  </footer>
-
-  <!-- Toast -->
-  <div id="toast" class="toast"></div>
-
-  <!-- Product modal -->
-  <div id="productModalBackdrop" class="modal-backdrop hidden">
+  <!-- מודאל מוצר -->
+  <div class="modal-backdrop" id="item-modal-backdrop">
     <div class="modal">
-      <header class="modal-header">
-        <h2 id="productModalTitle">מוצר</h2>
-        <button id="closeProductModalBtn" class="icon-btn">✕</button>
-      </header>
+      <div class="modal-header">
+        <h2 id="item-modal-title">מוצר</h2>
+        <button class="btn-ghost btn-small" id="item-modal-close">✕</button>
+      </div>
       <div class="modal-body">
-        <div class="image-section">
-          <div id="productImagePreview" class="image-preview placeholder">
-            <span class="camera-icon">📷</span>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div class="item-pic" id="item-modal-pic">
+            <span>📷</span>
           </div>
-          <div class="image-actions">
-            <label class="secondary-btn">
-              העלאת תמונה
-              <input id="productImageInput" type="file" accept="image/*" hidden />
-            </label>
-            <button id="productImageRemoveBtn" class="ghost-btn small">מחיקת תמונה</button>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <button class="btn-small" id="upload-image-btn">העלאת תמונה</button>
+            <button class="btn-small btn-ghost" id="delete-image-btn">מחיקת תמונה</button>
+            <input type="file" id="item-image-input" accept="image/*" style="display:none;" />
           </div>
         </div>
 
-        <div class="field">
-          <label>שם מוצר</label>
-          <input id="productNameInput" type="text" />
+        <div>
+          <label for="item-name-input">שם מוצר</label>
+          <input type="text" id="item-name-input" />
         </div>
 
-        <div class="field grid-2">
-          <div>
-            <label>מלאי נוכחי</label>
-            <input id="productStockInput" type="number" min="0" />
-          </div>
-          <div>
-            <label>מלאי מינימלי</label>
-            <input id="productMinStockInput" type="number" min="0" />
-          </div>
+        <div>
+          <label for="item-qty-input">מלאי נוכחי</label>
+          <input type="number" id="item-qty-input" />
         </div>
 
-        <div class="field">
-          <label>הערות</label>
-          <textarea id="productNotesInput" rows="2" placeholder="מיקום, ספק, הערות..."></textarea>
+        <div>
+          <label for="item-min-input">מלאי מינימלי</label>
+          <input type="number" id="item-min-input" />
         </div>
 
-        <div class="field">
+        <div>
+          <label for="item-notes-input">הערות</label>
+          <textarea id="item-notes-input"></textarea>
+        </div>
+
+        <div class="divider"></div>
+
+        <div>
           <label>שינוי מהיר</label>
-          <div class="quick-actions">
-            <button id="productMinusBtn" class="danger-btn">-1</button>
-            <button id="productPlusBtn" class="success-btn">+1</button>
+          <div class="chips-row">
+            <button class="btn-small" data-quick="-1">-1</button>
+            <button class="btn-small" data-quick="+1">+1</button>
           </div>
         </div>
-      </div>
-      <footer class="modal-footer">
-        <button id="deleteProductBtn" class="danger-outline-btn">🗑 מחיקה</button>
-        <button id="saveProductBtn" class="primary-btn">💾 שמור</button>
-      </footer>
-    </div>
-  </div>
 
-  <!-- Report modal -->
-  <div id="reportModalBackdrop" class="modal-backdrop hidden">
-    <div class="modal wide">
-      <header class="modal-header">
-        <h2>📊 דוח מלאי</h2>
-        <button id="closeReportModalBtn" class="icon-btn">✕</button>
-      </header>
-      <div class="modal-body report-body">
-        <div id="reportSummary" class="report-summary"></div>
-        <div id="reportLowStock" class="report-section"></div>
-        <div id="reportZeroStock" class="report-section"></div>
+        <div class="divider"></div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+          <button class="btn-danger" id="delete-item-btn">מחיקה</button>
+          <span style="flex:1"></span>
+          <button class="btn-primary" id="save-item-btn">שמור</button>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- מודאל דוח מלאי -->
+  <div class="modal-backdrop" id="report-modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>דוח מלאי</h2>
+        <button class="btn-ghost btn-small" id="report-modal-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="stats-row">
+          <div class="stat-box">
+            <div>מספר מוצרים</div>
+            <strong id="stat-total-items">0</strong>
+          </div>
+          <div class="stat-box">
+            <div>סה״כ כמות</div>
+            <strong id="stat-total-qty">0</strong>
+          </div>
+          <div class="stat-box">
+            <div>מלאי נמוך</div>
+            <strong id="stat-low-count">0</strong>
+          </div>
+          <div class="stat-box">
+            <div>נגמרו</div>
+            <strong id="stat-zero-count">0</strong>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div>
+          <div style="font-weight:bold;margin-bottom:4px;">מלאי נמוך</div>
+          <div id="report-low-list" style="font-size:13px;color:#ddd;"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div>
+          <div style="font-weight:bold;margin-bottom:4px;">נגמרו</div>
+          <div id="report-zero-list" style="font-size:13px;color:#ddd;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- סקריפט הלוגיקה -->
   <script src="script.js"></script>
 </body>
 </html>
