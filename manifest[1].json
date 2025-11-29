@@ -1,0 +1,11 @@
+{
+  "name": "אלחנן עודפים V21 (מקומי)",
+  "short_name": "אלחנן עודפים",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "dir": "rtl",
+  "lang": "he",
+  "icons": []
+}

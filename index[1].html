@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>אלחנן עודפים · V21</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#020617" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-title">
+      <h1>אלחנן עודפים · V21</h1>
+      <p class="subtitle">ניהול מלאי חכם · גרסת מכשיר מקומי</p>
+    </div>
+    <button id="toolsToggleBtn" class="ghost-btn">🧰 כלים</button>
+  </header>
+
+  <section id="toolsMenu" class="tools-menu hidden">
+    <button data-action="showAll">הצג הכל</button>
+    <button data-action="lowStock">מלאי נמוך</button>
+    <button data-action="zeroStock">נגמרו</button>
+    <button data-action="sortByUsage">מיון לפי שימוש</button>
+    <button data-action="sortByStock">מיון לפי כמות</button>
+    <button data-action="inventoryReport">📊 דוח מלאי</button>
+    <button data-action="backup">📥 גיבוי</button>
+    <button data-action="restore">📤 שחזור</button>
+  </section>
+
+  <main class="app-main">
+    <section class="toolbar">
+      <div class="search-wrapper">
+        <input id="searchInput" type="search" placeholder="חיפוש מוצר..." />
+      </div>
+      <button id="addProductBtn" class="primary-btn">➕ מוצר חדש</button>
+    </section>
+
+    <ul id="productList" class="product-list"></ul>
+  </main>
+
+  <footer class="app-footer">
+    הנתונים נשמרים <strong>רק על המכשיר הזה</strong>. אם רוצים להעתיק למכשיר אחר – להשתמש בגיבוי ושחזור.
+  </footer>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Product modal -->
+  <div id="productModalBackdrop" class="modal-backdrop hidden">
+    <div class="modal">
+      <header class="modal-header">
+        <h2 id="productModalTitle">מוצר</h2>
+        <button id="closeProductModalBtn" class="icon-btn">✕</button>
+      </header>
+      <div class="modal-body">
+        <div class="image-section">
+          <div id="productImagePreview" class="image-preview placeholder">
+            <span class="camera-icon">📷</span>
+          </div>
+          <div class="image-actions">
+            <label class="secondary-btn">
+              העלאת תמונה
+              <input id="productImageInput" type="file" accept="image/*" hidden />
+            </label>
+            <button id="productImageRemoveBtn" class="ghost-btn small">מחיקת תמונה</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>שם מוצר</label>
+          <input id="productNameInput" type="text" />
+        </div>
+
+        <div class="field grid-2">
+          <div>
+            <label>מלאי נוכחי</label>
+            <input id="productStockInput" type="number" min="0" />
+          </div>
+          <div>
+            <label>מלאי מינימלי</label>
+            <input id="productMinStockInput" type="number" min="0" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>הערות</label>
+          <textarea id="productNotesInput" rows="2" placeholder="מיקום, ספק, הערות..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>שינוי מהיר</label>
+          <div class="quick-actions">
+            <button id="productMinusBtn" class="danger-btn">-1</button>
+            <button id="productPlusBtn" class="success-btn">+1</button>
+          </div>
+        </div>
+      </div>
+      <footer class="modal-footer">
+        <button id="deleteProductBtn" class="danger-outline-btn">🗑 מחיקה</button>
+        <button id="saveProductBtn" class="primary-btn">💾 שמור</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Report modal -->
+  <div id="reportModalBackdrop" class="modal-backdrop hidden">
+    <div class="modal wide">
+      <header class="modal-header">
+        <h2>📊 דוח מלאי</h2>
+        <button id="closeReportModalBtn" class="icon-btn">✕</button>
+      </header>
+      <div class="modal-body report-body">
+        <div id="reportSummary" class="report-summary"></div>
+        <div id="reportLowStock" class="report-section"></div>
+        <div id="reportZeroStock" class="report-section"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
