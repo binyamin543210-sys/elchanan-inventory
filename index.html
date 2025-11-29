@@ -1,128 +1,808 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>אלחנן עודפים · מפלצת V21</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#020617" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<title>אלחנן עודפים V21 – ענן משותף</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root {
+  --bg-main: linear-gradient(#fff6f9, #f0f7ff);
+  --bg-card: #ffffff;
+  --bg-header: transparent;
+  --text-main: #111827;
+  --text-sub: #6b7280;
+  --text-accent: #0a5cff;
+  --shadow-card: 0 4px 12px rgba(15,23,42,0.18);
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+.app {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+}
+
+/* header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.header-sub {
+  font-size: 14px;
+  color: var(--text-sub);
+  margin-top: 4px;
+}
+
+.dark-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.6);
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.dark-toggle-btn span {
+  display: inline-flex;
+}
+
+/* search & filters */
+.search-card {
+  margin-top: 12px;
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 12px 12px 8px;
+  box-shadow: var(--shadow-card);
+}
+
+.search-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.search-row input[type="text"] {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.7);
+  font-size: 14px;
+  outline: none;
+}
+
+.search-row input[type="text"]:focus {
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 1px rgba(37,99,235,0.25);
+}
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  background: #e5e7eb;
+  color: #111827;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background: #e5e7eb;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.filters-row {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-chip {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  color: #111827;
+  border: none;
+  cursor: pointer;
+}
+
+.filter-chip.active {
+  background: #0f766e;
+  color: #f9fafb;
+}
+
+/* products list */
+.list {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 10px 12px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-top-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.card-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #f3f4f6;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.card-sub {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-top: 2px;
+}
+
+.qty-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.qty-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qty-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qty-btn.plus {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.qty-btn.minus {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.qty-value {
+  font-size: 20px;
+  font-weight: 700;
+  min-width: 32px;
+  text-align: center;
+}
+
+/* helper text */
+.helper {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-top: 8px;
+}
+
+/* detail modal */
+.detail-modal-backdrop,
+.img-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.65);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.detail-modal {
+  width: min(420px, 90vw);
+  max-height: 90vh;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 20px 30px rgba(15,23,42,0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.detail-close {
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.detail-row {
+  font-size: 13px;
+  color: #374151;
+}
+
+.detail-label {
+  color: #6b7280;
+}
+
+.detail-img {
+  margin-top: 4px;
+  width: 100%;
+  min-height: 120px;
+  border-radius: 12px;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.detail-note {
+  width: 100%;
+  min-height: 70px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  padding: 8px;
+  font-size: 13px;
+  resize: vertical;
+}
+
+.detail-actions {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.note-save-btn {
+  flex: 1;
+  border-radius: 999px;
+  border: none;
+  padding: 8px 10px;
+  background: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* img modal */
+.img-modal {
+  max-width: min(480px, 90vw);
+  max-height: 90vh;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 30px rgba(15,23,42,0.5);
+}
+
+.img-modal img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* dark mode */
+body.dark {
+  --bg-main: radial-gradient(circle at top, #020617, #0b1120);
+  --bg-card: #020617;
+  --bg-header: transparent;
+  --text-main: #e5e7eb;
+  --text-sub: #9ca3af;
+  --shadow-card: 0 4px 12px rgba(15,23,42,0.9);
+}
+
+body.dark .card,
+body.dark .search-card,
+body.dark .detail-modal,
+body.dark .img-modal {
+  background: #020617;
+  color: #e5e7eb;
+}
+
+body.dark .search-row input[type="text"] {
+  background: #020617;
+  color: #e5e7eb;
+  border-color: #475569;
+}
+
+body.dark .detail-note {
+  background: #020617;
+  color: #e5e7eb;
+  border-color: #475569;
+}
+
+body.dark .card-img,
+body.dark .detail-img {
+  background: #020617;
+}
+</style>
 </head>
 <body>
-  <header class="app-header">
-    <div class="app-title">
-      <h1>אלחנן עודפים · V21</h1>
-      <p class="subtitle">ענן משותף · ניהול מלאי חכם</p>
-    </div>
-    <button id="toolsToggleBtn" class="ghost-btn">🧰 כלים</button>
-  </header>
 
-  <section id="toolsMenu" class="tools-menu hidden">
-    <button data-action="showAll">הצג הכל</button>
-    <button data-action="lowStock">מלאי נמוך</button>
-    <button data-action="zeroStock">נגמרו</button>
-    <button data-action="sortByUsage">מיון לפי שימוש</button>
-    <button data-action="sortByStock">מיון לפי כמות</button>
-    <button data-action="inventoryReport">📊 דוח מלאי</button>
-    <button data-action="backup">📥 גיבוי</button>
-    <button data-action="restore">📤 שחזור</button>
-  </section>
+<!-- סאונדים -->
+<audio id="soundPlus" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="soundMinus" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+<audio id="soundSave" src="https://assets.mixkit.co/active_storage/sfx/2010/2010-preview.mp3"></audio>
 
-  <main class="app-main">
-    <section class="toolbar">
-      <div class="search-wrapper">
-        <input id="searchInput" type="search" placeholder="חיפוש מוצר..." />
-      </div>
-      <button id="addProductBtn" class="primary-btn">➕ מוצר חדש</button>
-    </section>
+<div class="app">
 
-    <section class="hint">
-      בתוך הסשן הרשימה <strong>לא משנה מקום</strong> כשאתה לוחץ + / -.  
-      מיון לפי שימוש קורה רק בכניסה / רענון או אם לוחצים בכלים.
-    </section>
+<header>
+  <div class="header-left">
+    <div class="header-title">אלחנן עודפים</div>
+    <div class="header-sub">מלאי בענן – משותף לכל המשתמשים</div>
+  </div>
+  <button class="dark-toggle-btn" id="darkToggle" onclick="toggleDarkMode()">
+    <span id="darkIcon">🌙</span>
+    <span id="darkText">מצב לילה</span>
+  </button>
+</header>
 
-    <ul id="productList" class="product-list"></ul>
-  </main>
-
-  <footer class="app-footer">
-    ניתן להוסיף למסך הבית באנדרואיד דרך תפריט הדפדפן → <strong>הוסף למסך הבית</strong>.
-  </footer>
-
-  <!-- Toast -->
-  <div id="toast" class="toast"></div>
-
-  <!-- Product modal -->
-  <div id="productModalBackdrop" class="modal-backdrop hidden">
-    <div class="modal">
-      <header class="modal-header">
-        <h2 id="productModalTitle">מוצר</h2>
-        <button id="closeProductModalBtn" class="icon-btn">✕</button>
-      </header>
-      <div class="modal-body">
-        <div class="image-section">
-          <div id="productImagePreview" class="image-preview placeholder">
-            <span class="camera-icon">📷</span>
-          </div>
-          <div class="image-actions">
-            <label class="secondary-btn">
-              העלאת תמונה
-              <input id="productImageInput" type="file" accept="image/*" hidden />
-            </label>
-            <button id="productImageRemoveBtn" class="ghost-btn small">מחיקת תמונה</button>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>שם מוצר</label>
-          <input id="productNameInput" type="text" />
-        </div>
-
-        <div class="field grid-2">
-          <div>
-            <label>מלאי נוכחי</label>
-            <input id="productStockInput" type="number" min="0" />
-          </div>
-          <div>
-            <label>מלאי מינימלי</label>
-            <input id="productMinStockInput" type="number" min="0" />
-          </div>
-        </div>
-
-        <div class="field">
-          <label>הערות</label>
-          <textarea id="productNotesInput" rows="2" placeholder="מיקום, ספק, הערות..."></textarea>
-        </div>
-
-        <div class="field">
-          <label>שינוי מהיר</label>
-          <div class="quick-actions">
-            <button id="productMinusBtn" class="danger-btn">-1</button>
-            <button id="productPlusBtn" class="success-btn">+1</button>
-          </div>
-        </div>
-      </div>
-      <footer class="modal-footer">
-        <button id="deleteProductBtn" class="danger-outline-btn">🗑 מחיקה</button>
-        <button id="saveProductBtn" class="primary-btn">💾 שמור</button>
-      </footer>
-    </div>
+<div class="search-card">
+  <div class="search-row">
+    <input id="searchInput" type="text" placeholder="חיפוש לפי שם / מספר / כמות..." />
+    <button class="btn" id="lowBtn">
+      🔻
+      <span>להראות רק כמות 0–1</span>
+    </button>
   </div>
 
-  <!-- Report modal -->
-  <div id="reportModalBackdrop" class="modal-backdrop hidden">
-    <div class="modal wide">
-      <header class="modal-header">
-        <h2>📊 דוח מלאי</h2>
-        <button id="closeReportModalBtn" class="icon-btn">✕</button>
-      </header>
-      <div class="modal-body report-body">
-        <div id="reportSummary" class="report-summary"></div>
-        <div id="reportLowStock" class="report-section"></div>
-        <div id="reportZeroStock" class="report-section"></div>
-      </div>
+  <div class="filters-row">
+    <button class="filter-chip active" data-mode="default">ברירת מחדל (שימושיות)</button>
+    <button class="filter-chip" data-mode="mostUsed">הכי פעילים</button>
+    <button class="filter-chip" data-mode="leastUsed">הכי פחות פעילים</button>
+    <button class="filter-chip" data-mode="mostQty">הכי מלאים</button>
+    <button class="filter-chip" data-mode="leastQty">הכי ריקים</button>
+  </div>
+</div>
+
+<div class="helper">
+  הכל נשמר ב-Firestore בענן – כל מי שנכנס לאותו אתר רואה את אותו מלאי.
+  לחיצה על התמונה הקטנה תפתח תמונה גדולה. לחיצה על שם המוצר תפתח דף פרטים.
+</div>
+
+<div id="productsList" class="list"></div>
+
+</div>
+
+<input type="file" id="imageInput" accept="image/*" style="display:none" />
+
+<div class="img-modal-backdrop" id="imgModal" onclick="closeImageModal()">
+  <div class="img-modal" onclick="event.stopPropagation()">
+    <img id="imgModalImg" src="" alt="תמונה" />
+  </div>
+</div>
+
+<div class="detail-modal-backdrop" id="detailModal" onclick="closeDetailModal()">
+  <div class="detail-modal" onclick="event.stopPropagation()">
+    <div class="detail-header">
+      <div class="detail-title" id="detailTitle"></div>
+      <button class="detail-close" onclick="closeDetailModal()">×</button>
+    </div>
+    <div class="detail-row"><span class="detail-label">מק״ט: </span><span id="detailId"></span></div>
+    <div class="detail-row"><span class="detail-label">שימושיות: </span><span id="detailScore"></span></div>
+    <div class="detail-row"><span class="detail-label">כמות נוכחית: </span><span id="detailQty"></span></div>
+    <div class="detail-img" id="detailImgBox">
+      <span style="color:#9ca3af;font-size:40px;">📷</span>
+    </div>
+    <div class="detail-row"><span class="detail-label">הערות:</span></div>
+    <textarea id="detailNote" class="detail-note" placeholder="למשל: איפה נמצא, סוג מדויק, ספק וכו'..."></textarea>
+    <div class="detail-actions">
+      <button class="note-save-btn" onclick="saveNote()">💾 שמור הערות</button>
+      <button class="btn btn-secondary" onclick="openImagePickerFromDetail()">📷 החלפת תמונה</button>
     </div>
   </div>
+</div>
 
-  <script src="script.js"></script>
+<!-- Firebase v8 -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script>
+// ---- Firebase config ----
+const firebaseConfig = {
+  apiKey: "AIzaSyDYp8FanuY-6svQRGWJGGZpnPW6ljqYtYs",
+  authDomain: "elhanan-odafim.firebaseapp.com",
+  projectId: "elhanan-odafim",
+  storageBucket: "elhanan-odafim.firebasestorage.app",
+  messagingSenderId: "129041760108",
+  appId: "1:129041760108:web:f99366a6be13557f41bd49",
+  measurementId: "G-RQLLM2Z1PS"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ---- מצב לילה ----
+const darkIconEl = document.getElementById("darkIcon");
+const darkTextEl = document.getElementById("darkText");
+
+function applyDarkFromStorage() {
+  const saved = localStorage.getItem("inv_dark");
+  if (saved === "1") {
+    document.body.classList.add("dark");
+    darkIconEl.textContent = "☀️";
+    darkTextEl.textContent = "מצב יום";
+  }
+}
+
+function toggleDarkMode() {
+  document.body.classList.toggle("dark");
+  const isDark = document.body.classList.contains("dark");
+  if (isDark) {
+    darkIconEl.textContent = "☀️";
+    darkTextEl.textContent = "מצב יום";
+    localStorage.setItem("inv_dark", "1");
+  } else {
+    darkIconEl.textContent = "🌙";
+    darkTextEl.textContent = "מצב לילה";
+    localStorage.setItem("inv_dark", "0");
+  }
+}
+
+// ---- סאונדים ----
+function playPlus() {
+  const a = document.getElementById("soundPlus");
+  if (a) a.play().catch(()=>{});
+}
+function playMinus() {
+  const a = document.getElementById("soundMinus");
+  if (a) a.play().catch(()=>{});
+}
+function playSave() {
+  const a = document.getElementById("soundSave");
+  if (a) a.play().catch(()=>{});
+}
+
+// ---- לוגיקת מוצרים עם Firestore (ריל־טיים לכל המכשירים) ----
+let products = [];
+let lowOnly = false;
+let sortMode = "default";
+let currentDetailDocId = null;
+
+const productsListEl   = document.getElementById("productsList");
+const searchInputEl    = document.getElementById("searchInput");
+const lowBtnEl         = document.getElementById("lowBtn");
+
+const detailModalEl    = document.getElementById("detailModal");
+const detailTitleEl    = document.getElementById("detailTitle");
+const detailIdEl       = document.getElementById("detailId");
+const detailScoreEl    = document.getElementById("detailScore");
+const detailQtyEl      = document.getElementById("detailQty");
+const detailImgBoxEl   = document.getElementById("detailImgBox");
+const detailNoteEl     = document.getElementById("detailNote");
+const imageInputEl     = document.getElementById("imageInput");
+
+const imgModalEl       = document.getElementById("imgModal");
+const imgModalImgEl    = document.getElementById("imgModalImg");
+
+// מאזין לענן – כל שינוי ב-Firestore מתעדכן לכל מי שפתוח
+function startRealtimeListener() {
+  db.collection("products").orderBy("id")
+    .onSnapshot(snapshot => {
+      products = snapshot.docs.map(d => {
+        const data = d.data() || {};
+        return {
+          docId: d.id,
+          id: data.id || 0,
+          name: data.name || "",
+          qty: typeof data.qty === "number" ? data.qty : 0,
+          image: data.image || null,
+          useScore: typeof data.useScore === "number" ? data.useScore : 0,
+          note: data.note || ""
+        };
+      });
+      renderProducts();
+    }, err => {
+      console.error("Firestore error:", err);
+    });
+}
+
+function getFilteredSortedProducts() {
+  const term = (searchInputEl.value || "").toLowerCase();
+  let list = products.filter(p => {
+    const text = (String(p.name || "") + " " + String(p.id || "") + " " + String(p.qty || "")).toLowerCase();
+    const matchesSearch = text.includes(term);
+    const lowMatch = lowOnly ? (p.qty || 0) <= 1 : true;
+    return matchesSearch && lowMatch;
+  });
+
+  list.sort((a,b) => {
+    const as = a.useScore || 0;
+    const bs = b.useScore || 0;
+    const aq = a.qty || 0;
+    const bq = b.qty || 0;
+    switch (sortMode) {
+      case "mostUsed":
+        if (as !== bs) return bs - as;
+        return (a.id || 0) - (b.id || 0);
+      case "leastUsed":
+        if (as !== bs) return as - bs;
+        return (a.id || 0) - (b.id || 0);
+      case "mostQty":
+        if (aq !== bq) return bq - aq;
+        return (a.id || 0) - (b.id || 0);
+      case "leastQty":
+        if (aq !== bq) return aq - bq;
+        return (a.id || 0) - (b.id || 0);
+      default:
+        return (a.id || 0) - (b.id || 0);
+    }
+  });
+
+  return list;
+}
+
+function renderProducts() {
+  const list = getFilteredSortedProducts();
+  productsListEl.innerHTML = "";
+  if (!list.length) {
+    productsListEl.innerHTML = '<div class="helper" style="margin-top:16px;">אין מוצרים תואמים.</div>';
+    return;
+  }
+
+  list.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const topRow = document.createElement("div");
+    topRow.className = "card-top-row";
+
+    const title = document.createElement("div");
+    title.className = "card-title";
+    title.textContent = p.name || "(ללא שם)";
+    title.onclick = () => openDetailModal(p.docId);
+
+    const subtitle = document.createElement("div");
+    subtitle.className = "card-sub";
+    subtitle.textContent =
+      "מק\"ט: " + (p.id || "") +
+      " · שימושיות: " + (p.useScore || 0);
+
+    const imgBox = document.createElement("div");
+    imgBox.className = "card-img";
+    if (p.image) {
+      const img = document.createElement("img");
+      img.src = p.image;
+      img.alt = p.name || "";
+      img.onclick = () => openImageModal(p.image);
+      imgBox.appendChild(img);
+    } else {
+      imgBox.textContent = "📦";
+    }
+
+    topRow.appendChild(imgBox);
+    const textBox = document.createElement("div");
+    textBox.appendChild(title);
+    textBox.appendChild(subtitle);
+    topRow.appendChild(textBox);
+
+    const qtyRow = document.createElement("div");
+    qtyRow.className = "qty-row";
+
+    const minusBtn = document.createElement("button");
+    minusBtn.className = "qty-btn minus";
+    minusBtn.textContent = "−";
+    minusBtn.onclick = () => changeQty(p.docId, -1);
+
+    const qtySpan = document.createElement("div");
+    qtySpan.className = "qty-value";
+    qtySpan.textContent = p.qty;
+
+    const plusBtn = document.createElement("button");
+    plusBtn.className = "qty-btn plus";
+    plusBtn.textContent = "+";
+    plusBtn.onclick = () => changeQty(p.docId, +1);
+
+    qtyRow.appendChild(minusBtn);
+    qtyRow.appendChild(qtySpan);
+    qtyRow.appendChild(plusBtn);
+
+    card.appendChild(topRow);
+    card.appendChild(qtyRow);
+
+    productsListEl.appendChild(card);
+  });
+}
+
+// שינוי כמות בענן – כל המכשירים רואים את זה מיד
+function changeQty(docId, delta) {
+  const ref = db.collection("products").doc(docId);
+
+  db.runTransaction(tx => {
+    return tx.get(ref).then(doc => {
+      if (!doc.exists) return;
+      const data = doc.data() || {};
+      let qty = typeof data.qty === "number" ? data.qty : 0;
+      qty += delta;
+      if (qty < 0) qty = 0;
+      tx.update(ref, { qty: qty });
+    });
+  }).then(() => {
+    if (delta > 0) playPlus(); else playMinus();
+  }).catch(err => {
+    console.error("שגיאה בעדכון כמות:", err);
+  });
+}
+
+// ---- מודל פרטים ----
+function openDetailModal(docId) {
+  const p = products.find(x => x.docId === docId);
+  if (!p) return;
+  currentDetailDocId = docId;
+
+  detailTitleEl.textContent = p.name || "(ללא שם)";
+  detailIdEl.textContent    = p.id || "";
+  detailScoreEl.textContent = p.useScore || 0;
+  detailQtyEl.textContent   = p.qty;
+  detailNoteEl.value        = p.note || "";
+
+  detailImgBoxEl.innerHTML = "";
+  if (p.image) {
+    const img = document.createElement("img");
+    img.src = p.image;
+    img.style.maxWidth = "100%";
+    img.style.borderRadius = "8px";
+    img.onclick = () => openImageModal(p.image);
+    detailImgBoxEl.appendChild(img);
+  } else {
+    const span = document.createElement("span");
+    span.style.color = "#9ca3af";
+    span.style.fontSize = "40px";
+    span.textContent = "📷";
+    detailImgBoxEl.appendChild(span);
+  }
+
+  detailModalEl.style.display = "flex";
+}
+
+function closeDetailModal() {
+  detailModalEl.style.display = "none";
+  currentDetailDocId = null;
+}
+
+// שמירת הערות לענן
+function saveNote() {
+  if (!currentDetailDocId) return;
+  const newNote = detailNoteEl.value || "";
+  db.collection("products").doc(currentDetailDocId).update({
+    note: newNote
+  }).then(() => {
+    playSave();
+  }).catch(err => {
+    console.error("שגיאה בשמירת הערות:", err);
+  });
+}
+
+// ---- מודל תמונה ----
+function openImageModal(url) {
+  if (!url) return;
+  imgModalImgEl.src = url;
+  imgModalEl.style.display = "flex";
+}
+
+function closeImageModal() {
+  imgModalEl.style.display = "none";
+  imgModalImgEl.src = "";
+}
+
+// לעתיד – אם תרצה תמונות דרך upload ו-Firebase Storage
+function openImagePickerFromDetail() {
+  if (!currentDetailDocId) return;
+  imageInputEl.click();
+}
+
+// כרגע אנחנו לא מעלים – רק כדי שלא ישבר כלום
+imageInputEl.addEventListener("change", () => {
+  imageInputEl.value = "";
+});
+
+// ---- פילטרים, חיפוש וכו' ----
+function initFilters() {
+  searchInputEl.addEventListener("input", () => {
+    renderProducts();
+  });
+
+  lowBtnEl.addEventListener("click", () => {
+    lowOnly = !lowOnly;
+    lowBtnEl.classList.toggle("active", lowOnly);
+    renderProducts();
+  });
+
+  document.querySelectorAll(".filter-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      const mode = chip.getAttribute("data-mode") || "default";
+      setSortMode(mode, chip);
+    });
+  });
+}
+
+function setSortMode(mode, el) {
+  sortMode = mode;
+  document.querySelectorAll(".filter-chip").forEach(chip => {
+    chip.classList.toggle("active", chip === el);
+  });
+  renderProducts();
+}
+
+// ---- אתחול כללי ----
+function init() {
+  applyDarkFromStorage();
+  initFilters();
+  startRealtimeListener();
+}
+
+window.onload = init;
+</script>
+
 </body>
 </html>
