@@ -296,7 +296,6 @@
   <!-- Firebase (Compat) -->
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-storage-compat.js"></script>
 
   <!-- קובץ הקונפיג -->
   <script src="firebase-config.js"></script>
@@ -308,7 +307,7 @@
   <div class="app-container">
     <h1>אלחנן עודפים · V21</h1>
     <div class="subtitle" id="subtitle">
-      ניהול מלאי חכם · מסתנכרן בין כל המכשירים (Firebase Realtime Database)
+      ניהול מלאי חכם · מסתנכרן בין כל המכשירים (Firebase Realtime Database, כולל תמונות)
     </div>
 
     <!-- פס עליון: כלים + חיפוש + מוצר חדש -->
@@ -350,6 +349,7 @@
           </div>
           <div style="display:flex;flex-direction:column;gap:4px;">
             <button class="btn-small" id="upload-image-btn">העלאת תמונה</button>
+            <button class="btn-small btn-ghost" id="delete-image-btn">מחיקת תמונה</button>
             <input type="file" id="item-image-input-camera" accept="image/*" capture="environment" style="display:none;" />
             <input type="file" id="item-image-input-gallery" accept="image/*" style="display:none;" />
           </div>
@@ -363,11 +363,6 @@
         <div>
           <label for="item-qty-input">מלאי נוכחי</label>
           <input type="number" id="item-qty-input" />
-        </div>
-
-        <div>
-          <label for="item-min-input">מלאי מינימלי</label>
-          <input type="number" id="item-min-input" />
         </div>
 
         <div>
@@ -395,8 +390,6 @@
       </div>
     </div>
   </div>
-
-  <!-- מודאל דוח מלאי (נשאיר לעתיד אם תרצה) -->
 
   <!-- מודאל תמונה גדולה -->
   <div class="modal-backdrop" id="image-modal-backdrop">

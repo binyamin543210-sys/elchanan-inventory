@@ -1,16 +1,15 @@
-// script.js V21 A2
+// script.js V21 A4 – Realtime DB + תמונות Base64
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-const storage = firebase.storage();
 
 // ----------------- State -----------------
-let items = {};
+let items = {};          // { id, name, qty, notes, imageData, lastUsed, updatedAt }
 let currentFilter = "all";
-let currentSort = null;   // 'usage' | 'qty' | null
+let currentSort = null;  // 'usage' | 'qty' | null
 let currentSearch = "";
 let editingItemId = null;
-let uploadingImageFile = null;
+let uploadingImageData = null; // Base64
 
 // ----------------- DOM -----------------
 const itemsListEl      = document.getElementById("items-list");
@@ -24,9 +23,9 @@ const itemModalTitle    = document.getElementById("item-modal-title");
 const itemModalPic      = document.getElementById("item-modal-pic");
 const itemNameInput     = document.getElementById("item-name-input");
 const itemQtyInput      = document.getElementById("item-qty-input");
-const itemMinInput      = document.getElementById("item-min-input");
 const itemNotesInput    = document.getElementById("item-notes-input");
 const uploadImageBtn    = document.getElementById("upload-image-btn");
+const deleteImageBtn    = document.getElementById("delete-image-btn");
 const itemImageInputCam = document.getElementById("item-image-input-camera");
 const itemImageInputGal = document.getElementById("item-image-input-gallery");
 const deleteItemBtn     = document.getElementById("delete-item-btn");
@@ -90,16 +89,6 @@ function updateQtyInDb(id, newQty) {
   });
 }
 
-function deleteImageFromStorage(item) {
-  if (!item.imageUrl) return Promise.resolve();
-  try {
-    const ref = storage.refFromURL(item.imageUrl);
-    return ref.delete().catch(() => {});
-  } catch (e) {
-    return Promise.resolve();
-  }
-}
-
 // ----------------- Render -----------------
 function renderItems() {
   const entries = Object.values(items || {});
@@ -116,10 +105,10 @@ function renderItems() {
 
   // פילטר מלאי
   if (currentFilter === "low") {
-    // מלאי נמוך: כמות בין 1 ל-1 (כלומר 1) – "נשאר פחות מ-1" -> קרוב לסוף
+    // מלאי נמוך – כמות 1 (כמעט נגמר)
     filtered = filtered.filter(it => {
       const qty = Number(it.qty || 0);
-      return qty > 0 && qty <= 1;
+      return qty === 1;
     });
   } else if (currentFilter === "zero") {
     filtered = filtered.filter(it => Number(it.qty || 0) === 0);
@@ -154,9 +143,9 @@ function renderItems() {
 
     const pic = document.createElement("div");
     pic.className = "item-pic";
-    if (item.imageUrl) {
+    if (item.imageData) {
       const img = document.createElement("img");
-      img.src = item.imageUrl;
+      img.src = item.imageData;
       pic.appendChild(img);
     } else {
       pic.textContent = "📷";
@@ -165,8 +154,8 @@ function renderItems() {
     // לחיצה על התמונה:
     pic.addEventListener("click", ev => {
       ev.stopPropagation();
-      if (item.imageUrl) {
-        openImageModal(item.imageUrl);
+      if (item.imageData) {
+        openImageModal(item.imageData);
       } else {
         openImageUploadChooser();
       }
@@ -182,11 +171,10 @@ function renderItems() {
     const chip = document.createElement("span");
     chip.className = "tag";
     const qtyNum = Number(item.qty || 0);
-    const minNum = Number(item.minQty || 0);
     if (qtyNum === 0) {
       chip.textContent = "נגמר";
       chip.style.background = "#b00020";
-    } else if (qtyNum <= 1) {
+    } else if (qtyNum === 1) {
       chip.textContent = "מלאי נמוך";
       chip.style.background = "#b36a00";
     } else {
@@ -263,25 +251,25 @@ function changeQty(id, delta) {
 // ----------------- Item modal -----------------
 function openItemModal(id) {
   editingItemId = id || null;
-  uploadingImageFile = null;
+  uploadingImageData = null;
 
   if (id && items[id]) {
     const item = items[id];
     itemModalTitle.textContent = "עריכת מוצר";
     itemNameInput.value  = item.name || "";
     itemQtyInput.value   = item.qty ?? "";
-    itemMinInput.value   = item.minQty ?? "";
     itemNotesInput.value = item.notes || "";
-    setModalImage(item.imageUrl);
+    setModalImage(item.imageData);
     deleteItemBtn.style.display = "inline-block";
+    deleteImageBtn.style.display = item.imageData ? "inline-block" : "none";
   } else {
     itemModalTitle.textContent = "מוצר חדש";
     itemNameInput.value = "";
     itemQtyInput.value = "0";
-    itemMinInput.value = "0";
     itemNotesInput.value = "";
     setModalImage(null);
     deleteItemBtn.style.display = "none";
+    deleteImageBtn.style.display = "none";
   }
 
   itemModalBackdrop.classList.add("show");
@@ -291,11 +279,11 @@ function closeItemModal() {
   itemModalBackdrop.classList.remove("show");
 }
 
-function setModalImage(url) {
+function setModalImage(imageData) {
   itemModalPic.innerHTML = "";
-  if (url) {
+  if (imageData) {
     const img = document.createElement("img");
-    img.src = url;
+    img.src = imageData;
     itemModalPic.appendChild(img);
   } else {
     itemModalPic.textContent = "📷";
@@ -303,8 +291,8 @@ function setModalImage(url) {
 }
 
 // ----------------- Image big modal -----------------
-function openImageModal(url) {
-  imageModalImg.src = url;
+function openImageModal(imageData) {
+  imageModalImg.src = imageData;
   imageModalBackdrop.classList.add("show");
 }
 
@@ -325,10 +313,11 @@ function openImageUploadChooser() {
 
 function handleChosenImage(file) {
   if (!file) return;
-  uploadingImageFile = file;
   const reader = new FileReader();
   reader.onload = e => {
-    setModalImage(e.target.result);
+    const dataUrl = e.target.result; // Base64
+    uploadingImageData = dataUrl;
+    setModalImage(dataUrl);
   };
   reader.readAsDataURL(file);
 }
@@ -342,7 +331,15 @@ itemImageInputGal.addEventListener("change", () => {
   handleChosenImage(file);
 });
 
-uploadImageBtn.addEventListener("click", openImageUploadChooser);
+uploadImageBtn.addEventListener("click", () => {
+  openImageUploadChooser();
+});
+
+deleteImageBtn.addEventListener("click", () => {
+  uploadingImageData = null;
+  setModalImage(null);
+  deleteImageBtn.style.display = "none";
+});
 
 // ----------------- Save item -----------------
 async function saveItemFromModal() {
@@ -367,26 +364,21 @@ async function saveItemFromModal() {
 
   item.name = name;
   item.qty = qty;
-  item.minQty = 0; // לא משתמשים כרגע
   item.notes = notes;
 
-  try {
-    if (uploadingImageFile) {
-      const file = uploadingImageFile;
-      const id = item.id || generateId();
-      const ref = storage.ref(`items/${id}/${file.name}`);
-      await ref.put(file);
-      const url = await ref.getDownloadURL();
-      item.imageUrl = url;
-      item.id = id;
-    }
+  // תמונה:
+  if (uploadingImageData !== null) {
+    // אם המשתמש בחר משהו חדש (או מחק)
+    item.imageData = uploadingImageData || null;
+  }
 
+  try {
     await saveItemToDb(item);
     showToast("נשמר בהצלחה");
     closeItemModal();
   } catch (e) {
     console.error(e);
-    showToast("שגיאה בשמירה (בדוק הרשאות Firebase Storage)");
+    showToast("שגיאה בשמירה");
   }
 }
 
@@ -400,7 +392,6 @@ async function deleteCurrentItem() {
   if (!confirm(`למחוק את "${item.name}"?`)) return;
 
   try {
-    await deleteImageFromStorage(item);
     await deleteItemFromDb(editingItemId);
     showToast("נמחק");
     closeItemModal();
