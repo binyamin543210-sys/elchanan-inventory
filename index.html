@@ -276,6 +276,21 @@
       padding: 8px;
       font-size: 13px;
     }
+
+    .active-sort {
+      box-shadow: 0 0 0 1px #0058ff;
+    }
+
+    .search-input {
+      min-width: 160px;
+      max-width: 220px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #444;
+      background:#111;
+      color:#f5f5f5;
+      font-size: 13px;
+    }
   </style>
 
   <!-- Firebase (Compat) -->
@@ -296,7 +311,7 @@
       ניהול מלאי חכם · מסתנכרן בין כל המכשירים (Firebase Realtime Database)
     </div>
 
-    <!-- פס עליון: כלים + מוצר חדש -->
+    <!-- פס עליון: כלים + חיפוש + מוצר חדש -->
     <div class="bar">
       <span>כלים:</span>
       <button class="pill" data-filter="all">הצג הכל</button>
@@ -304,9 +319,8 @@
       <button class="pill" data-filter="zero">נגמרו</button>
       <button class="pill" id="sort-usage">מיון לפי שימוש</button>
       <button class="pill" id="sort-qty">מיון לפי כמות</button>
-      <button class="pill" id="report-btn">דוח מלאי</button>
-      <button class="pill" id="backup-btn">גיבוי</button>
-      <button class="pill" id="restore-btn">שחזור</button>
+
+      <input id="search-input" class="search-input" type="text" placeholder="חיפוש מוצר..." />
 
       <span style="flex:1"></span>
 
@@ -336,8 +350,8 @@
           </div>
           <div style="display:flex;flex-direction:column;gap:4px;">
             <button class="btn-small" id="upload-image-btn">העלאת תמונה</button>
-            <button class="btn-small btn-ghost" id="delete-image-btn">מחיקת תמונה</button>
-            <input type="file" id="item-image-input" accept="image/*" style="display:none;" />
+            <input type="file" id="item-image-input-camera" accept="image/*" capture="environment" style="display:none;" />
+            <input type="file" id="item-image-input-gallery" accept="image/*" style="display:none;" />
           </div>
         </div>
 
@@ -382,46 +396,17 @@
     </div>
   </div>
 
-  <!-- מודאל דוח מלאי -->
-  <div class="modal-backdrop" id="report-modal-backdrop">
-    <div class="modal">
+  <!-- מודאל דוח מלאי (נשאיר לעתיד אם תרצה) -->
+
+  <!-- מודאל תמונה גדולה -->
+  <div class="modal-backdrop" id="image-modal-backdrop">
+    <div class="modal" style="max-width:90vw;max-height:90vh;padding:8px;">
       <div class="modal-header">
-        <h2>דוח מלאי</h2>
-        <button class="btn-ghost btn-small" id="report-modal-close">✕</button>
+        <h2 style="font-size:16px;">תמונה</h2>
+        <button class="btn-ghost btn-small" id="image-modal-close">✕</button>
       </div>
-      <div class="modal-body">
-        <div class="stats-row">
-          <div class="stat-box">
-            <div>מספר מוצרים</div>
-            <strong id="stat-total-items">0</strong>
-          </div>
-          <div class="stat-box">
-            <div>סה״כ כמות</div>
-            <strong id="stat-total-qty">0</strong>
-          </div>
-          <div class="stat-box">
-            <div>מלאי נמוך</div>
-            <strong id="stat-low-count">0</strong>
-          </div>
-          <div class="stat-box">
-            <div>נגמרו</div>
-            <strong id="stat-zero-count">0</strong>
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div>
-          <div style="font-weight:bold;margin-bottom:4px;">מלאי נמוך</div>
-          <div id="report-low-list" style="font-size:13px;color:#ddd;"></div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div>
-          <div style="font-weight:bold;margin-bottom:4px;">נגמרו</div>
-          <div id="report-zero-list" style="font-size:13px;color:#ddd;"></div>
-        </div>
+      <div class="modal-body" style="align-items:center;justify-content:center;">
+        <img id="image-modal-img" src="" style="max-width:100%;max-height:70vh;border-radius:12px;" />
       </div>
     </div>
   </div>
